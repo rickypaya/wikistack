@@ -1,10 +1,11 @@
 const express = require('express');
 const { addPage } = require('../views');
+const { Page } = require('../models');
 const wikiRouter = express.Router();
 
 
 
-wikiRouter.get('/', (req, res) => {
+wikiRouter.get('/', (req, res, next) => {
     try{
         res.send('getting /wiki')
     }
@@ -12,17 +13,25 @@ wikiRouter.get('/', (req, res) => {
         next(error);
     }
 });
-
-wikiRouter.post('/', (req, res) => {
+function slugFromTitle(title, options){
+    options.slug = title.replace(/s+/g,'_').replace(/\W/g,'');
+}
+wikiRouter.post('/', async (req, res, next) => {
     try{
-            res.send('getting /wiki post');
+        const { title, content } = req.params;
+            const page = await Page.create({
+                title: title,
+                content: content
+            })
+            page.addHook('beforeValidate', slugFromTitle(title, page))
+            res.redirect('/');
     }
     catch(error){
         next(error);
     }
 });
 
-wikiRouter.get('/add', (req, res) => {
+wikiRouter.get('/add', (req, res, next) => {
     try{
             res.send(addPage());
     }

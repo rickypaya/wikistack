@@ -9,9 +9,6 @@ var Page = db.define('page', {
   slug: {
     type: Sequelize.STRING,
     allowNull: false,
-    validate: {
-      isUrl: true,
-    }
   },
   content: {
     type: Sequelize.TEXT,
@@ -19,7 +16,6 @@ var Page = db.define('page', {
   },
   status: {
     type: Sequelize.ENUM('open','closed'),
-    allowNull: false,
   }
 });
 
@@ -30,9 +26,9 @@ var User = db.define('user', {
   },
   email: {
     type: Sequelize.STRING,
-    isEmail: true,
+    allowNull: false,
     validate:{
-      allowNull: false,
+      isEmail: true
     }
   }
 });
