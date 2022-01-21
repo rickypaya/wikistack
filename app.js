@@ -1,7 +1,9 @@
 const express = require('express');
 const morgan = require('morgan');
+const wikiRouter = require('./routes/wiki');
+const userRouter = require('./routes/users');
 const layout = require('./views/layout');
-const { db, Page, User } = require('./models');
+const { db } = require('./models');
 
 const PORT = 3000;
 const app = express();
@@ -22,10 +24,10 @@ app.use(express.static(__dirname + "/public"));
 //body parser
 app.use(express.urlencoded({ extended: false }));
 //app.use(express.json());
-
+app.use('/wiki', wikiRouter);
 
 app.get('/', (req, res) => {
-  res.send(layout());
+  res.redirect('/wiki');
 });
 
 const connector = async () => {
